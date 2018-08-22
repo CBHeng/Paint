@@ -1,7 +1,13 @@
-import Draw from './Draw.js'
+import Paint from './Paint.js'
 
-let canvas = document.querySelector('#draw')
+let config = {
+    canvas: '#Paint',
+    pen : {
+        el: '#pen'
+    },
+    circle: {
+        el: '#circle'
+    }
+}
 
-let drawer = new Draw(canvas)
-
-drawer.init()
+let paint = new Paint(config)

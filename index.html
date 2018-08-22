@@ -6,9 +6,37 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Draw</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
 </head>
 <body>
-        <canvas id="draw"></canvas>
+        <div id="toolbar">
+            <div id="toolbar-list">
+                <div id="toolbar-list-useing" class="btn-large circle  not-border">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div id="toolbar-list-others">
+                    <div  id ="pen" class="btn-large not-border">
+                        <i class="fas fa-pen-nib"></i>
+                    </div>
+                    <div id="circle" class="btn-large not-border">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                    <div class="btn-large not-border">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <div class="btn-large not-border">
+                        <i class="fas fa-eraser"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="setting">
+
+            </div>
+        </div>
+
+        <canvas id="Paint"></canvas>
 
         <script src="index.js" type="module"></script>
 </body>

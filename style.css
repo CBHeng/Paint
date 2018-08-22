@@ -1,4 +1,32 @@
 body,html{
+    position: relative;
     padding: 0;
     margin: 0;
+}
+
+#Paint {
+    position: fixed;
+}
+
+#toolbar{
+    padding:0px 30px;
+}
+
+#toolbar-list-others{
+    display: inline-block;
+}
+
+.btn-large {
+    padding: 20px;
+    font-size: 30px;
+    border: 1px solid #ccc;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn-large.circle {
+    border-radius: 50%;
+}
+.not-border{
+    border:0;
 }
