@@ -11,3 +11,5 @@ let config = {
 }
 
 let paint = new Paint(config)
+
+paint.init()
