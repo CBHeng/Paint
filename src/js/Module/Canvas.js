@@ -6,6 +6,10 @@ export default class Canvas {
 
         this.draw = false
 
+        this.width = 0
+
+        this.height = 0
+
         this.axis = {
             x: 0,
             y: 0
@@ -13,59 +17,76 @@ export default class Canvas {
 
         this.stores = [];
 
-        this.tools = {}
-
-        this.feature = false
+        this.tool = null
 
         this.tmp = {}
     }
 
-    init(tools) {
+    init(CustomizedTools) {
+
         this.element.width = window.innerWidth
 
         this.element.height = window.innerHeight
 
-        this.tools = tools
+        this.width = window.innerWidth
 
-        this.initToolsEvent()
+        this.height = window.innerHeight
+
+        this.initToolsEvent(CustomizedTools)
     }
 
-    initToolsEvent() {
-        let tools = this.tools
+    initToolsEvent(CustomizedTools) {
 
-        for( let name in tools ) {
-            tools[name].element.addEventListener('click', this.clickTool.bind(this, tools[name]))
-        }
-    }
-    clickTool(tool,event) {
+        for (let name in CustomizedTools ) {
+            
+            let CustomizedTool = CustomizedTools[name]
 
-        if(tool.click)tool.click(this,event)
+            let CustomizedToolDom = document.querySelector(CustomizedTool.el)
+            
+            if (!CustomizedToolDom) return
 
-        this.resetFeatureEvent(tool)
+            CustomizedToolDom.addEventListener('click', (event) => {
 
-        this.addFeatureEvent()
+                CustomizedTool = new CustomizedTool.class()
 
-    }
+                if (CustomizedTool.click) CustomizedTool.click(this, event)
 
-    resetFeatureEvent(updated) {
-
-        if (this.feature) {
-            this.element.removeEventListener('mousedown', this.feature.beforeDraw)
-            this.element.removeEventListener('mousemove', this.feature.draw)
-            this.element.removeEventListener('mouseup', this.feature.endDraw)
-        }
-
-        this.feature = {
-            class: updated,
-            beforeDraw: updated.beforeDraw.bind(updated,this),
-            draw: updated.draw.bind(updated,this),
-            endDraw: updated.endDraw.bind(updated,this),
+                this.resetCanvasEvent(CustomizedTool)
+            })
         }
     }
 
-    addFeatureEvent() {
-        this.element.addEventListener('mousedown', this.feature.beforeDraw)
-        this.element.addEventListener('mousemove', this.feature.draw)
-        this.element.addEventListener('mouseup', this.feature.endDraw)
+    resetCanvasEvent(CustomizedTool) {
+
+        let beforeDraw = (event) => {
+            if (CustomizedTool.beforeDraw) CustomizedTool.beforeDraw(this, event)
+        }
+
+        let draw = (event) => {
+            if (CustomizedTool.beforeDraw) CustomizedTool.draw(this, event)
+        }
+
+        let endDraw = (event) => {
+            if (CustomizedTool.beforeDraw) CustomizedTool.endDraw(this, event)
+        }
+
+        this.element.addEventListener('mousedown', beforeDraw)
+
+        this.element.addEventListener('mousemove', draw)
+
+        this.element.addEventListener('mouseup', endDraw)
+
+        if(this.tool) {
+            this.element.removeEventListener('mousedown', this.tool.beforeDraw)
+            this.element.removeEventListener('mousemove', this.tool.draw)
+            this.element.removeEventListener('mouseup', this.tool.endDraw)
+        }
+
+        this.tool = {
+            class: CustomizedTool,
+            beforeDraw: beforeDraw,
+            draw: draw,
+            endDraw: endDraw
+        }        
     }
 }

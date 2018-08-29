@@ -4,33 +4,33 @@ export default class Pen extends Tool{
     constructor(elementName) {
         super(elementName)
 
-        this.name = 'pen'
+        this.path = []
     }
 
-    click() {
-        
+    click(canvas, event) {
+        console.log(canvas, event)
     }
 
     beforeDraw(canvas,event) {
-        canvas.draw = true
+        canvas.isDraw = true
         canvas.axis.x = event.offsetX
         canvas.axis.y = event.offsetY
 
+        canvas.ctx.beginPath();
     }
 
     draw(canvas, event) {
-        if( !canvas.draw ) return
+        if (!canvas.isDraw ) return
 
-        canvas.ctx.beginPath();
-        canvas.ctx.moveTo(canvas.axis.x, canvas.axis.y);
-        canvas.ctx.lineTo(event.offsetX, event.offsetY);
-        canvas.ctx.stroke(); 
+        //canvas.ctx.moveTo(canvas.axis.x, canvas.axis.y);
+        //canvas.ctx.lineTo(event.offsetX, event.offsetY);
+        //canvas.ctx.stroke(); 
 
         canvas.axis.x = event.offsetX
         canvas.axis.y = event.offsetY
     }
 
     endDraw(canvas, event) {
-        canvas.draw = false
+        canvas.isDraw = false
     }
 }

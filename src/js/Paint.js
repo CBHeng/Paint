@@ -3,14 +3,21 @@ import Pen from './Module/Tools/Pen.js';
 import Circle from './Module/Tools/Circle.js';
 
 export default class Paint {
-    constructor(config){
+    constructor(){
 
-        this.canvas = new Canvas(config.canvas)
-        
+        this.canvas = new Canvas('#Paint')
+
         this.tools = {
-            pen: new Pen(config.pen.el),
-            circle: new Circle(config.circle.el)
+            pen: {
+                class: Pen,
+                el: '#pen'
+            },
+            circle: {
+                class: Circle,
+                el: '#circle'
+            }
         }
+
     }
 
     init() {
