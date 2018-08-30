@@ -8,7 +8,7 @@ export default class Pen extends Tool{
     }
 
     click(canvas, event) {
-        console.log(canvas, event)
+        console.log(canvas.store)
     }
 
     beforeDraw(canvas,event) {
@@ -22,9 +22,9 @@ export default class Pen extends Tool{
     draw(canvas, event) {
         if (!canvas.isDraw ) return
 
-        //canvas.ctx.moveTo(canvas.axis.x, canvas.axis.y);
-        //canvas.ctx.lineTo(event.offsetX, event.offsetY);
-        //canvas.ctx.stroke(); 
+        canvas.ctx.moveTo(canvas.axis.x, canvas.axis.y);
+        canvas.ctx.lineTo(event.offsetX, event.offsetY);
+        canvas.ctx.stroke(); 
 
         canvas.axis.x = event.offsetX
         canvas.axis.y = event.offsetY

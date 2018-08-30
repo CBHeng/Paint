@@ -6,6 +6,19 @@ export default class Circle extends Tool {
 
         this.lastX = 0
         this.lastY = 0
+
+        this.width = 0
+        this.height = 0
+        
+        this.start = {
+            x: this.lastX - this.width / 2,
+            y: this.lastY - this.height / 2
+        }
+
+        this.end = {
+            x: this.lastX + this.width / 2,
+            y: this.lastY + this.height / 2
+        }
     }
 
     click(canvas,event) {
@@ -15,10 +28,44 @@ export default class Circle extends Tool {
 
         this.lastX = window.innerWidth / 2
         this.lastY = window.innerHeight / 2
-        console.log(this);
+        
+        this.width = 50
+        this.height = 50
+
+        this.start = {
+            x: this.lastX - this.width / 2,
+            y: this.lastY - this.height / 2
+        }
+
+        this.end = {
+            x: this.lastX + this.width / 2,
+            y: this.lastY + this.height / 2
+        }
+    }
+
+    selectRule(canvas, event) {
+        let now = {
+            x: event.offsetX,
+            y: event.offsetY
+        }
+
+        let xMatch = (this.start.x <= now.x) && (this.end.x >= now.x)
+        let yMatch = (this.start.y <= now.y) && (this.end.y >= now.y)
+
+        let isMatch = xMatch && yMatch
+
+        return isMatch
+    }
+
+    defaultSelect(canvas,event) {
+        console.log('@@')
+        canvas.ctx.rect(this.start.x, this.start.y, this.width, this.height)
+        canvas.ctx.stroke()
     }
 
     beforeDraw(canvas, event) {
+        if ( canvas.select !== this ) return 
+
         canvas.isDraw = true
 
         canvas.axis.x = event.offsetX
@@ -27,10 +74,6 @@ export default class Circle extends Tool {
 
     draw(canvas, event) {
         if (!canvas.isDraw) return 
-
-        let spaceX = 0
-
-        let spaceY = 0
 
         canvas.ctx.clearRect(0,0,window.innerWidth,window.innerHeight)
 
@@ -53,5 +96,6 @@ export default class Circle extends Tool {
         this.lastX = event.offsetX
 
         this.lastY = event.offsetY
+
     }
 }

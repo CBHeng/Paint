@@ -17,6 +17,8 @@ export default class Canvas {
 
         this.stores = [];
 
+        this.select = null
+
         this.tool = null
 
         this.tmp = {}
@@ -47,27 +49,33 @@ export default class Canvas {
 
             CustomizedToolDom.addEventListener('click', (event) => {
 
-                CustomizedTool = new CustomizedTool.class()
+                let Tool = CustomizedTool.class
 
-                if (CustomizedTool.click) CustomizedTool.click(this, event)
+                Tool = new Tool()
 
-                this.resetCanvasEvent(CustomizedTool)
+                if (Tool.click) Tool.click(this, event)
+
+                this.resetCanvasEvent(Tool)
+
+                this.stores.push(Tool)
             })
         }
     }
 
-    resetCanvasEvent(CustomizedTool) {
+    resetCanvasEvent(Tool) {
 
         let beforeDraw = (event) => {
-            if (CustomizedTool.beforeDraw) CustomizedTool.beforeDraw(this, event)
+            this.selectRule(event)
+
+            if (Tool.beforeDraw) Tool.beforeDraw(this, event)
         }
 
         let draw = (event) => {
-            if (CustomizedTool.beforeDraw) CustomizedTool.draw(this, event)
+            if (Tool.beforeDraw) Tool.draw(this, event)
         }
 
         let endDraw = (event) => {
-            if (CustomizedTool.beforeDraw) CustomizedTool.endDraw(this, event)
+            if (Tool.beforeDraw) Tool.endDraw(this, event)
         }
 
         this.element.addEventListener('mousedown', beforeDraw)
@@ -83,10 +91,22 @@ export default class Canvas {
         }
 
         this.tool = {
-            class: CustomizedTool,
+            class: Tool,
             beforeDraw: beforeDraw,
             draw: draw,
             endDraw: endDraw
         }        
+    }
+
+    selectRule(event) {
+        this.select = this.stores.find((store) => {
+            return store.selectRule ? store.selectRule(this, event) : false
+        })
+
+        if (this.select) {
+            this.select.defaultSelect ? this.select.defaultSelect(this, event) : false
+        }
+
+        return this.select
     }
 }
