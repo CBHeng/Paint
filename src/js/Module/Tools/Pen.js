@@ -5,6 +5,8 @@ export default class Pen extends Tool{
         super(elementName)
 
         this.path = []
+
+        this.disableSelect = true
     }
 
     click(canvas, event) {
@@ -17,6 +19,7 @@ export default class Pen extends Tool{
         canvas.axis.y = event.offsetY
 
         canvas.ctx.beginPath();
+        canvas.ctx.lineCap = "round";
     }
 
     draw(canvas, event) {

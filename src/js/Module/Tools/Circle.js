@@ -4,12 +4,36 @@ export default class Circle extends Tool {
     constructor(elementName) {
         super(elementName)
 
+        this.canSelectOtherObject = true
+
         this.lastX = 0
         this.lastY = 0
 
         this.width = 0
         this.height = 0
         
+        this.isSelected = false
+
+        this.start = {
+            x: this.lastX - this.width / 2,
+            y: this.lastY - this.height / 2
+        }
+
+        this.end = {
+            x: this.lastX + this.width / 2,
+            y: this.lastY + this.height / 2
+        }
+    }
+
+    set size({ width, height }) {
+        this.width = width
+        this.height = height
+    }
+
+    set axis({ x, y }) {
+        this.lastX = x
+        this.lastY = y
+
         this.start = {
             x: this.lastX - this.width / 2,
             y: this.lastY - this.height / 2
@@ -22,24 +46,14 @@ export default class Circle extends Tool {
     }
 
     click(canvas,event) {
-        canvas.ctx.beginPath();
-        canvas.ctx.arc(window.innerWidth / 2, window.innerHeight / 2, 50, 0, 2 * Math.PI);
-        canvas.ctx.stroke();
-
-        this.lastX = window.innerWidth / 2
-        this.lastY = window.innerHeight / 2
-        
-        this.width = 50
-        this.height = 50
-
-        this.start = {
-            x: this.lastX - this.width / 2,
-            y: this.lastY - this.height / 2
+        this.size = {
+            width: 50 * 2,
+            height: 50 * 2
         }
 
-        this.end = {
-            x: this.lastX + this.width / 2,
-            y: this.lastY + this.height / 2
+        this.axis = {
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2
         }
     }
 
@@ -58,44 +72,46 @@ export default class Circle extends Tool {
     }
 
     defaultSelect(canvas,event) {
-        console.log('@@')
+        canvas.ctx.beginPath();
+
+        canvas.ctx.strokeStyle = "#888888"
+        
         canvas.ctx.rect(this.start.x, this.start.y, this.width, this.height)
+        
         canvas.ctx.stroke()
     }
 
-    beforeDraw(canvas, event) {
-        if ( canvas.select !== this ) return 
-
-        canvas.isDraw = true
-
-        canvas.axis.x = event.offsetX
-        canvas.axis.y = event.offsetY
+    select(canvas, event) {
+        this.isSelected = true
     }
 
-    draw(canvas, event) {
-        if (!canvas.isDraw) return 
+    move(canvas, event) {
+        if (!this.isSelected) return 
 
-        canvas.ctx.clearRect(0,0,window.innerWidth,window.innerHeight)
+        this.axis = {
+            x: this.lastX + (event.offsetX - this.lastX ),
+            y: this.lastY + (event.offsetY - this.lastY)
+        }
+    }
 
+    stop(canvas, event) {
+        if (!this.isSelected) return 
+        
+        this.isSelected = false
+
+        this.axis = {
+            x: this.lastX + (event.offsetX - this.lastX ),
+            y: this.lastY + (event.offsetY - this.lastY)
+        }
+    }
+
+    draw(canvas) {
         canvas.ctx.beginPath();
 
-        canvas.ctx.arc(this.lastX , this.lastY, 50, 0, 2 * Math.PI);
+        canvas.ctx.strokeStyle = "#000000"
+
+        canvas.ctx.arc(this.lastX, this.lastY, 50, 0, 2 * Math.PI);
 
         canvas.ctx.stroke();
-
-        this.lastX = this.lastX + (event.offsetX - canvas.axis.x)
-        this.lastY = this.lastY + (event.offsetY - canvas.axis.y)
-
-        canvas.axis.x = event.offsetX
-        canvas.axis.y = event.offsetY
-    }
-
-    endDraw(canvas, event) {
-        canvas.isDraw = false
-
-        this.lastX = event.offsetX
-
-        this.lastY = event.offsetY
-
     }
 }

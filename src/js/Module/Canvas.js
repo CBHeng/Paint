@@ -35,6 +35,18 @@ export default class Canvas {
         this.height = window.innerHeight
 
         this.initToolsEvent(CustomizedTools)
+
+        requestAnimationFrame(this.core.bind(this))
+    }
+
+    core() {
+        this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+
+        this.stores.map((store) => {
+            store.draw ? store.draw(this) : false
+        })
+
+        requestAnimationFrame(this.core.bind(this))
     }
 
     initToolsEvent(CustomizedTools) {
@@ -64,49 +76,51 @@ export default class Canvas {
 
     resetCanvasEvent(Tool) {
 
-        let beforeDraw = (event) => {
-            this.selectRule(event)
+        let select = (event) => {
+            if (Tool.canSelectOtherObject) {
+                let selectObject = this.selectRules(event)
 
-            if (Tool.beforeDraw) Tool.beforeDraw(this, event)
+                if (!selectObject) return
+
+                selectObject.select(this, event)
+            }else {
+                Tool.start()
+            }
         }
 
-        let draw = (event) => {
-            if (Tool.beforeDraw) Tool.draw(this, event)
+        let move = (event) => {
+            if (Tool.move) Tool.move(this, event)
         }
 
-        let endDraw = (event) => {
-            if (Tool.beforeDraw) Tool.endDraw(this, event)
+        let stop = (event) => {
+            if (Tool.stop) Tool.stop(this, event)
         }
 
-        this.element.addEventListener('mousedown', beforeDraw)
+        this.element.addEventListener('mousedown', select)
 
-        this.element.addEventListener('mousemove', draw)
+        this.element.addEventListener('mousemove', move)
 
-        this.element.addEventListener('mouseup', endDraw)
+        this.element.addEventListener('mouseup', stop)
 
         if(this.tool) {
-            this.element.removeEventListener('mousedown', this.tool.beforeDraw)
-            this.element.removeEventListener('mousemove', this.tool.draw)
-            this.element.removeEventListener('mouseup', this.tool.endDraw)
+            this.element.removeEventListener('mousedown', this.tool.select)
+            this.element.removeEventListener('mousemove', this.tool.move)
+            this.element.removeEventListener('mouseup', this.tool.stop)
         }
 
         this.tool = {
             class: Tool,
-            beforeDraw: beforeDraw,
-            draw: draw,
-            endDraw: endDraw
+            select: select,
+            move: move,
+            stop: stop
         }        
     }
 
-    selectRule(event) {
+    selectRules(event) {
         this.select = this.stores.find((store) => {
             return store.selectRule ? store.selectRule(this, event) : false
         })
-
-        if (this.select) {
-            this.select.defaultSelect ? this.select.defaultSelect(this, event) : false
-        }
-
+        console.log (this.select)
         return this.select
     }
 }
