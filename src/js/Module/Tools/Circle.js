@@ -89,8 +89,8 @@ export default class Circle extends Tool {
         if (!this.isSelected) return 
 
         this.axis = {
-            x: this.lastX + (event.offsetX - this.lastX ),
-            y: this.lastY + (event.offsetY - this.lastY)
+            x: this.lastX + canvas.moveSpace.x,
+            y: this.lastY + canvas.moveSpace.y
         }
     }
 
@@ -100,8 +100,8 @@ export default class Circle extends Tool {
         this.isSelected = false
 
         this.axis = {
-            x: this.lastX + (event.offsetX - this.lastX ),
-            y: this.lastY + (event.offsetY - this.lastY)
+            x: this.lastX + canvas.moveSpace.x,
+            y: this.lastY + canvas.moveSpace.y
         }
     }
 

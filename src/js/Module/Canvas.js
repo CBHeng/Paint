@@ -10,14 +10,18 @@ export default class Canvas {
 
         this.height = 0
 
-        this.axis = {
+        this.moveSpace = {
             x: 0,
             y: 0
         }
 
         this.stores = [];
 
-        this.select = null
+        this.select = {
+            obj: null,
+            x: 0,
+            y: 0
+        }
 
         this.tool = null
 
@@ -86,10 +90,21 @@ export default class Canvas {
             }else {
                 Tool.start()
             }
+
+            this.select.x = event.offsetX
+            this.select.y = event.offsetY
         }
 
         let move = (event) => {
+            this.moveSpace = {
+                x: event.offsetX - this.select.x,
+                y: event.offsetY - this.select.y
+            }
+
             if (Tool.move) Tool.move(this, event)
+
+            this.select.x = event.offsetX
+            this.select.y = event.offsetY
         }
 
         let stop = (event) => {
@@ -117,10 +132,16 @@ export default class Canvas {
     }
 
     selectRules(event) {
-        this.select = this.stores.find((store) => {
+        let tool = this.stores.find((store) => {
             return store.selectRule ? store.selectRule(this, event) : false
         })
-        console.log (this.select)
-        return this.select
+        
+        this.select = {
+            obj: tool,
+            x: event.offsetX,
+            y: event.offsetY
+        }
+
+        return tool
     }
 }
