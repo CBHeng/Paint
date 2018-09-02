@@ -10,6 +10,11 @@ export default class Canvas {
 
         this.height = 0
 
+        this.perious = {
+            x: 0,
+            y: 0
+        }
+
         this.moveSpace = {
             x: 0,
             y: 0
@@ -38,7 +43,9 @@ export default class Canvas {
 
         this.height = window.innerHeight
 
-        this.initToolsEvent(CustomizedTools)
+        this.coreEvents()
+
+        this.coreToolEvents(CustomizedTools)
 
         requestAnimationFrame(this.core.bind(this))
     }
@@ -53,27 +60,51 @@ export default class Canvas {
         requestAnimationFrame(this.core.bind(this))
     }
 
-    initToolsEvent(CustomizedTools) {
+    coreEvents() {
+        let mousedownDoing = (event) => {
+            if(!this.tool) return 
 
-        for (let name in CustomizedTools ) {
-            
-            let CustomizedTool = CustomizedTools[name]
+            if (!this.tool.canSelectOtherObj) {
+                this.tool.start(this, event)
+            }else {
+                this.tool.select(this, event)
+            }
+        }
 
-            let CustomizedToolDom = document.querySelector(CustomizedTool.el)
-            
-            if (!CustomizedToolDom) return
+        let mousemoveDoing = () => {
+            if(!this.tool) return
 
-            CustomizedToolDom.addEventListener('click', (event) => {
+            this.tool.move(this, event)
+        }
 
-                let Tool = CustomizedTool.class
+        let mouseupDoing = () => {
+            if(!this.tool) return
 
-                Tool = new Tool()
+            this.tool.stop(this, event)
+        }
 
-                if (Tool.click) Tool.click(this, event)
+        this.element.addEventListener('mousedown', mousedownDoing)
 
-                this.resetCanvasEvent(Tool)
+        this.element.addEventListener('mousemove', mousemoveDoing)
 
-                this.stores.push(Tool)
+        this.element.addEventListener('mouseup', mouseupDoing)
+    }
+
+    coreToolEvents(tools) {
+        for( let toolName in tools) {
+            let tool = tools[toolName]
+
+            let toolDOM = document.querySelector(tool.el)
+
+            toolDOM.addEventListener('click', (event) => {
+                this.tool = new tool.class()
+
+                this.stores.push(this.tool)
+
+                this.tool.default ? this.tool.default() : false
+                console.log('click start')
+                console.log(this.tool)
+                console.log('click end')
             })
         }
     }

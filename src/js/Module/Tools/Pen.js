@@ -6,34 +6,47 @@ export default class Pen extends Tool{
 
         this.path = []
 
-        this.disableSelect = true
+        this.isDraw = false
+        
+        this.canSelectOtherObj = false
     }
 
     click(canvas, event) {
-        console.log(canvas.store)
+        
     }
 
-    beforeDraw(canvas,event) {
-        canvas.isDraw = true
-        canvas.axis.x = event.offsetX
-        canvas.axis.y = event.offsetY
+    start(canvas, event) {
+        this.isDraw = true
+        
+        this.start ={
+            x: event.offsetX,
+            y: event.offsetY
+        }
+    }
 
-        canvas.ctx.beginPath();
-        canvas.ctx.lineCap = "round";
+    move() {
+        if(!this.isDraw) return
+
+        this.path.push({
+            x: event.offsetX,
+            y:  event.offsetY
+        })
+    }
+
+    stop() {
+        this.isDraw = false
     }
 
     draw(canvas, event) {
-        if (!canvas.isDraw ) return
+        if(!this.path.length) return
 
-        canvas.ctx.moveTo(canvas.axis.x, canvas.axis.y);
-        canvas.ctx.lineTo(event.offsetX, event.offsetY);
-        canvas.ctx.stroke(); 
+        canvas.ctx.beginPath()
+        canvas.ctx.moveTo(this.start.x, this.start.y)
+        
+        this.path.forEach((item)=>{
+            canvas.ctx.lineTo(item.x, item.y)
+        })
 
-        canvas.axis.x = event.offsetX
-        canvas.axis.y = event.offsetY
-    }
-
-    endDraw(canvas, event) {
-        canvas.isDraw = false
+        canvas.ctx.stroke();  
     }
 }
