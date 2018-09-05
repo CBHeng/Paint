@@ -45,7 +45,7 @@ export default class Canvas {
 
         this.coreEvents()
 
-        this.coreToolEvents(CustomizedTools)
+        this.coreToolsInit(CustomizedTools)
 
         requestAnimationFrame(this.core.bind(this))
     }
@@ -53,7 +53,7 @@ export default class Canvas {
     core() {
         this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
-        this.stores.map((store) => {
+        this.stores.forEach((store) => {
             store.draw ? store.draw(this) : false
         })
 
@@ -90,28 +90,23 @@ export default class Canvas {
         this.element.addEventListener('mouseup', mouseupDoing)
     }
 
-    coreToolEvents(tools) {
+    coreToolsInit(tools) {
         for( let toolName in tools) {
+            let canvas = this
             let tool = tools[toolName]
 
-            let toolDOM = document.querySelector(tool.el)
+            
+            tool.element.addEventListener('click',(event)=> {
+                canvas.tool = tool
 
-            toolDOM.addEventListener('click', (event) => {
-                this.tool = new tool.class()
-
-                this.stores.push(this.tool)
-
-                this.tool.default ? this.tool.default() : false
-                console.log('click start')
-                console.log(this.tool)
-                console.log('click end')
+                canvas.tool.init(canvas,event)
             })
         }
     }
 
     resetCanvasEvent(Tool) {
 
-        let select = (event) => {
+        let selectOrStart = (event) => {
             if (Tool.canSelectOtherObject) {
                 let selectObject = this.selectRules(event)
 
@@ -142,21 +137,21 @@ export default class Canvas {
             if (Tool.stop) Tool.stop(this, event)
         }
 
-        this.element.addEventListener('mousedown', select)
+        this.element.addEventListener('mousedown', selectOrStart)
 
         this.element.addEventListener('mousemove', move)
 
         this.element.addEventListener('mouseup', stop)
 
         if(this.tool) {
-            this.element.removeEventListener('mousedown', this.tool.select)
+            this.element.removeEventListener('mousedown', this.tool.selectOrStart)
             this.element.removeEventListener('mousemove', this.tool.move)
             this.element.removeEventListener('mouseup', this.tool.stop)
         }
 
         this.tool = {
             class: Tool,
-            select: select,
+            selectOrStart: selectOrStart,
             move: move,
             stop: stop
         }        
@@ -174,5 +169,15 @@ export default class Canvas {
         }
 
         return tool
+    }
+
+    addCurrentToolToStore(currentTool) {
+        if (!currentTool) return false
+
+        let newTool = Object.create(this.tool)
+
+        this.tool = newTool
+
+        this.stores.push(this.tool)
     }
 }

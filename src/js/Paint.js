@@ -8,14 +8,8 @@ export default class Paint {
         this.canvas = new Canvas('#Paint')
 
         this.tools = {
-            pen: {
-                class: Pen,
-                el: '#pen'
-            },
-            circle: {
-                class: Circle,
-                el: '#circle'
-            }
+            pen: new Pen('#pen'),
+            circle: new Circle('#circle')
         }
 
     }

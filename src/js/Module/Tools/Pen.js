@@ -4,21 +4,31 @@ export default class Pen extends Tool{
     constructor(elementName) {
         super(elementName)
 
-        this.path = []
+        this.path = new Array()
 
         this.isDraw = false
         
         this.canSelectOtherObj = false
+
+        this.initialPoint = {
+            x:0,
+            y:0
+        }
     }
 
-    click(canvas, event) {
-        
+    init(canvas, event) {
+        console.log("click")
+        canvas.addCurrentToolToStore(this)
     }
 
     start(canvas, event) {
+        canvas.addCurrentToolToStore(this)
+
         this.isDraw = true
         
-        this.start ={
+        this.path = []
+        
+        this.initialPoint ={
             x: event.offsetX,
             y: event.offsetY
         }
@@ -29,24 +39,27 @@ export default class Pen extends Tool{
 
         this.path.push({
             x: event.offsetX,
-            y:  event.offsetY
+            y: event.offsetY
         })
     }
 
-    stop() {
+    stop(canvas,event) {
         this.isDraw = false
     }
 
     draw(canvas, event) {
         if(!this.path.length) return
 
-        canvas.ctx.beginPath()
-        canvas.ctx.moveTo(this.start.x, this.start.y)
-        
-        this.path.forEach((item)=>{
-            canvas.ctx.lineTo(item.x, item.y)
-        })
+        canvas.ctx.beginPath();
 
-        canvas.ctx.stroke();  
+        canvas.ctx.moveTo(this.initialPoint.x, this.initialPoint.y);
+        
+        this.path.forEach( point => {
+            canvas.ctx.lineTo(point.x, point.y);
+        })
+        
+        canvas.ctx.stroke();
+
+
     }
 }
