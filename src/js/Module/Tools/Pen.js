@@ -17,7 +17,6 @@ export default class Pen extends Tool{
     }
 
     init(canvas, event) {
-        console.log("click")
         canvas.addCurrentToolToStore(this)
     }
 
@@ -59,7 +58,6 @@ export default class Pen extends Tool{
         })
         
         canvas.ctx.stroke();
-
 
     }
 }

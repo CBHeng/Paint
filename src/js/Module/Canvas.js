@@ -15,15 +15,26 @@ export default class Canvas {
             y: 0
         }
 
-        this.moveSpace = {
-            x: 0,
-            y: 0
-        }
-
         this.stores = [];
 
         this.select = {
             obj: null,
+            x: 0,
+            y: 0
+        }
+
+        this.mouse = {
+            last: {
+                x: 0,
+                y: 0
+            },
+            now: {
+                x: 0,
+                y: 0
+            }
+        }
+
+        this.moveSpace = {
             x: 0,
             y: 0
         }
@@ -54,6 +65,8 @@ export default class Canvas {
         this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
         this.stores.forEach((store) => {
+            if(this.select.obj === store) store.drawSelectStyle(this)
+
             store.draw ? store.draw(this) : false
         })
 
@@ -64,23 +77,68 @@ export default class Canvas {
         let mousedownDoing = (event) => {
             if(!this.tool) return 
 
+            this.mouse.now.x = event.offsetX
+
+            this.mouse.now.y = event.offsetY
+            
             if (!this.tool.canSelectOtherObj) {
                 this.tool.start(this, event)
-            }else {
+            } else {
+                this.select.x = event.offsetX
+                this.select.y = event.offsetY
+
+                let selectObj = this.stores.find((store) => {
+                    return store.selectRule ? store.selectRule(this, event) : false
+                })
+
+                if(!selectObj) {
+                    this.select.obj = null
+
+                    return
+                }
+
+                this.select.obj = selectObj
+
+                this.tool = selectObj
+                
                 this.tool.select(this, event)
             }
+
+            this.mouse.last.x = event.offsetX
+
+            this.mouse.last.y = event.offsetY
         }
 
         let mousemoveDoing = () => {
             if(!this.tool) return
 
+            this.mouse.now.x = event.offsetX
+
+            this.mouse.now.y = event.offsetY
+
+            this.moveSpace.x = this.mouse.now.x - this.mouse.last.x
+
+            this.moveSpace.y = this.mouse.now.y - this.mouse.last.y
+
             this.tool.move(this, event)
+
+            this.mouse.last.x = event.offsetX
+
+            this.mouse.last.y = event.offsetY
         }
 
         let mouseupDoing = () => {
             if(!this.tool) return
 
+            this.mouse.now.x = event.offsetX
+
+            this.mouse.now.y = event.offsetY
+
             this.tool.stop(this, event)
+
+            this.mouse.last.x = event.offsetX
+
+            this.mouse.last.y = event.offsetY
         }
 
         this.element.addEventListener('mousedown', mousedownDoing)
@@ -104,75 +162,8 @@ export default class Canvas {
         }
     }
 
-    resetCanvasEvent(Tool) {
-
-        let selectOrStart = (event) => {
-            if (Tool.canSelectOtherObject) {
-                let selectObject = this.selectRules(event)
-
-                if (!selectObject) return
-
-                selectObject.select(this, event)
-            }else {
-                Tool.start()
-            }
-
-            this.select.x = event.offsetX
-            this.select.y = event.offsetY
-        }
-
-        let move = (event) => {
-            this.moveSpace = {
-                x: event.offsetX - this.select.x,
-                y: event.offsetY - this.select.y
-            }
-
-            if (Tool.move) Tool.move(this, event)
-
-            this.select.x = event.offsetX
-            this.select.y = event.offsetY
-        }
-
-        let stop = (event) => {
-            if (Tool.stop) Tool.stop(this, event)
-        }
-
-        this.element.addEventListener('mousedown', selectOrStart)
-
-        this.element.addEventListener('mousemove', move)
-
-        this.element.addEventListener('mouseup', stop)
-
-        if(this.tool) {
-            this.element.removeEventListener('mousedown', this.tool.selectOrStart)
-            this.element.removeEventListener('mousemove', this.tool.move)
-            this.element.removeEventListener('mouseup', this.tool.stop)
-        }
-
-        this.tool = {
-            class: Tool,
-            selectOrStart: selectOrStart,
-            move: move,
-            stop: stop
-        }        
-    }
-
-    selectRules(event) {
-        let tool = this.stores.find((store) => {
-            return store.selectRule ? store.selectRule(this, event) : false
-        })
-        
-        this.select = {
-            obj: tool,
-            x: event.offsetX,
-            y: event.offsetY
-        }
-
-        return tool
-    }
-
-    addCurrentToolToStore(currentTool) {
-        if (!currentTool) return false
+    addCurrentToolToStore() {
+        if (!this.tool) return false
 
         let newTool = Object.create(this.tool)
 

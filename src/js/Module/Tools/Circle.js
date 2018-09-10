@@ -4,7 +4,7 @@ export default class Circle extends Tool {
     constructor(elementName) {
         super(elementName)
 
-        this.canSelectOtherObject = true
+        this.canSelectOtherObj = true
 
         this.lastX = 0
         this.lastY = 0
@@ -45,7 +45,9 @@ export default class Circle extends Tool {
         }
     }
 
-    click(canvas,event) {
+    init(canvas,event) {
+        canvas.addCurrentToolToStore(this)
+
         this.size = {
             width: 50 * 2,
             height: 50 * 2
@@ -71,21 +73,12 @@ export default class Circle extends Tool {
         return isMatch
     }
 
-    defaultSelect(canvas,event) {
-        canvas.ctx.beginPath();
-
-        canvas.ctx.strokeStyle = "#888888"
-        
-        canvas.ctx.rect(this.start.x, this.start.y, this.width, this.height)
-        
-        canvas.ctx.stroke()
-    }
-
     select(canvas, event) {
         this.isSelected = true
     }
 
     move(canvas, event) {
+  
         if (!this.isSelected) return 
 
         this.axis = {
@@ -103,6 +96,17 @@ export default class Circle extends Tool {
             x: this.lastX + canvas.moveSpace.x,
             y: this.lastY + canvas.moveSpace.y
         }
+    }
+
+    drawSelectStyle(canvas) {
+
+        canvas.ctx.beginPath();
+
+        canvas.ctx.strokeStyle = "#888888"
+
+        canvas.ctx.rect(this.start.x, this.start.y, this.width, this.height)
+
+        canvas.ctx.stroke()
     }
 
     draw(canvas) {
