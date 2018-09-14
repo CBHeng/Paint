@@ -2,13 +2,13 @@
 > [Demo](https://cbheng.github.io/draw/)
 
 ## Why can I do ?
-> 實作 Javascript ，刻意練習。
+> 加強 Javascript ，刻意練習。
 - 使用 Javascript ES6
 - 使用 HTML5 Canvas
 - DRY (Don't repeat yourself)
 - Desgin pattarn
 
-## Design Idea
+## Canvas Core Desgin
 > 小畫家的 `工具` 圍繞著 `畫板` 做繪畫動作
 -  畫板核心 `Core Api`
     - 繪畫 : 使用requestAnimationFrame不斷重繪畫面
@@ -20,29 +20,30 @@
     - Circle.js
 
 ## Paint Tool in Canvas Core Api
-- drawSelectStyle
-  - 物件類工具才會使用的API，如果物件正被選取，該如何繪畫預設選取樣式
-- draw
-  - 工具本身如何繪畫  
+- `drawSelectStyle`
+  - 物件類 -> 如果物件正被選取，該如何繪畫`物件預設選取樣式`
+  - 筆刷類 -> 無法使用
+- `draw`
+  - 工具物件如何繪畫  
 - 參考範例
   - Pen.js
   - Circle.js
 
 ## Paint Tool in Canvas Lifecycle API
 
-- `init` === envent click in tool dom
-   - `點選工具之初始動作` -> 大致用來初始化數據和畫板上初始化物件。
-- `start` or `select` === event mousedown in canvas
-   - `start` -> 是筆刷類工具的操作, 使用者在畫板鼠標(mousedown)的事件動作。
-   - `select` -> 是物件類工具的操作, 使用者在畫板鼠標(mousedown)的事件動作，需要另外定義選取機制(selectRule)。
+- `init` === envent `click` in `tool dom`
+   - 點選工具之初始動作 -> 大致用來初始化數據和畫板上初始化物件。
+- `start` or `select` === event `mousedown` in canvas
+   - start -> 是筆刷類工具的操作, 使用者在畫板鼠標(mousedown)的事件動作。
+   - select -> 是物件類工具的操作, 使用者在畫板鼠標(mousedown)的事件動作，需要另外定義選取機制(selectRule)。
        - `selectRule` -> 用來決定物件的選取機制，可以說是工具在畫板上選取物件的演算法。
            - selectRule 會在 canvas core 內執行，依照每個物件的工具型別，來執行目前每個物件選取機制。
            - selectRule 後， 搭配 drawSelectStyle，來完成物件的選取效果。
-- `move` === event mousemove in canvas
+- `move` === event `mousemove` in canvas
     - 畫板上，鼠標移動時，數據該如何實作，大致上會跟 start 或是 select 搭配。
         - 筆刷類 -> `鼠標拖移，數據如何儲存或更新。`
         - 物件類 -> `物件拖移時，物件數據如何更新。`
-- `stop` === event mouseup in canvas
+- `stop` === event `mouseup` in canvas
     - 畫板上，鼠標放開時，數據該如何實作，大致上會跟 move 搭配。
 - 參考範例
      - Pen.js
