@@ -1,56 +1,102 @@
-# Draw Paint
-> [Demo](https://cbheng.github.io/draw/)
+# Paint Canvas
+實作小畫家，與 Canvas繪圖 有何不同 ? 
+* 易擴充的工具 ( Tool )
+* 工具開發，更聚焦數據的變化
+* Canvas Tool API 規範
 
-## Why can I do ?
-> 加強 Javascript ，刻意練習。
-- 使用 Javascript ES6
-- 使用 HTML5 Canvas
-- DRY (Don't repeat yourself)
-- Desgin pattarn
+## Demo
 
-## Canvas Core Desgin
-> 小畫家的 `工具` 圍繞著 `畫板` 做繪畫動作
--  畫板核心 `Core Api`
-    - 繪畫 : 使用requestAnimationFrame不斷重繪畫面
-    - Canvas.js - core
--  畫板提供工具修改物件狀態的`Lifecycle API`，`Lifecycle API`依照`鼠標事件`與`使用者可能需要的操作`來做設計API。
-    - Canvas.js - coreEventTool
--  工具專注於`物件數據`上的操作 - (例如:座標更新、路徑紀錄、顏色)。
-    - Pen.js
-    - Circle.js
+[點我->實際範例 ](https://cbheng.github.io/draw/)
 
-## Paint Tool in Canvas Core Api
-- `drawSelectStyle`
-  - 物件類 -> 如果物件正被選取，該如何繪畫`物件預設選取樣式`
-  - 筆刷類 -> 無法使用
-- `draw`
-  - 工具物件如何繪畫  
-- 參考範例
-  - Pen.js
-  - Circle.js
+使用 PaintJS Module，來初始化小畫家基本工具，PaintJS Module只對Canvas dom、Tool dom 來做初始化。
 
-## Paint Tool in Canvas Lifecycle API
+<font color=#eeeeee size=1>備註: PaintJS Module 不包含 UI Layout 的製訂，需自行調整 UI Layout。</font>
 
-- `init` === envent `click` in `tool dom`
-   - 點選工具之初始動作 -> 大致用來初始化數據和畫板上初始化物件。
-- `start` or `select` === event `mousedown` in canvas
-   - start -> 是筆刷類工具的操作, 使用者在畫板鼠標(mousedown)的事件動作。
-   - select -> 是物件類工具的操作, 使用者在畫板鼠標(mousedown)的事件動作，需要另外定義選取機制(selectRule)。
-       - `selectRule` -> 用來決定物件的選取機制，可以說是工具在畫板上選取物件的演算法。
-           - selectRule 會在 canvas core 內執行，依照每個物件的工具型別，來執行目前每個物件選取機制。
-           - selectRule 後， 搭配 drawSelectStyle，來完成物件的選取效果。
-- `move` === event `mousemove` in canvas
-    - 畫板上，鼠標移動時，數據該如何實作，大致上會跟 start 或是 select 搭配。
-        - 筆刷類 -> `鼠標拖移，數據如何儲存或更新。`
-        - 物件類 -> `物件拖移時，物件數據如何更新。`
-- `stop` === event `mouseup` in canvas
-    - 畫板上，鼠標放開時，數據該如何實作，大致上會跟 move 搭配。
-- 參考範例
-     - Pen.js
-     - Circle.js
+## How to use PaintJS Module ?
+* `Canvas` 是 `PaintJS 核心`
+* `Pen 、 Circle` 是 PaintJS 的`附屬工具`。
+``` javascript
+import { Canvas, Pen, Circle } from './Paint/Paint.js'
+ 
+let canvas = new Canvas({
+    el: '#Paint',
+    tools: {
+        pen: Pen,
+        circle: Circle
+    }
+})
+```
 
-## 還在思考的設計點
-1. Canvas stores 到底要直接儲存完整的tool class, 還是tool class 再切一個data api呢?
-   >  靈感來自vue.js。
-2. tool 是否使用es6 class, 還是用 object {} 來做設定 ?
-   >  主要在canvas addCurrentToolToStore 這邊的api, 覺得有點綁手綁腳, 應該要將stores改成數據結構, 而我目前是直接使用複製當前的Tool class到stores陣列內。
+## Canvas Config API
+|名稱|屬性|必填|說明|
+|----|-----|----|----|
+|`el`|String|Y|只需要 `HTML DOM tag name`，將會以目標名稱自動綁定畫板DOM。|
+|`tools`|Object|Y|物件放置`要使用的工具`，自行定義`物件屬性的名稱`。<br />實際單一工具 ( 例如:Pen... ) 將會有客製 API 介紹。|
+
+## Tool Config API
+
+|名稱|屬性|必填|說明|
+|----|-----|----|----|
+|`dom`|DOM|Y|`工具的DOM`，實際運作綁定 click event。|
+|`data`|Callback|Y|此工具繪畫物件，自己需要的數據。<br />必須 `return` 數據，數據必須`物件格式`。|
+|`draw`|Callback|Y|此工具繪畫出來的物件，如何使用數據呈現 ? <br /><br />其他參數: `canvas`|
+|`drawSelectStyle`|Callback|N|此 API 用來`定義選取後"預設樣式"`該`如何繪畫`。<br>工具產生出來的物件，會有選取預設樣式。<br /><br />其他參數: (`canvas`,`event`)|
+|`init`|Callback|N|此API 發生在工具DOM `點選事件 (click event)`上。<br /><br />其他參數: (`canvas`,`event`)|
+|`start`|Callback|Y|前提 `init 已觸發`之後。<br />此API 發生在，畫板DOM `鼠標點選 (mousedown event)` 上。<br /><br />其他參數: (`canvas`,`event`)|
+|`move`|Callback|Y|前提 `start 已觸發`之後。<br />此API 發生在，畫板DOM `鼠標移動 (mousemove event)` 上。<br /><br />其他參數: (`canvas`,`event`)|
+|`stop`|Callback|Y|前提 `move 已觸發`之後。<br />此API 發生在，畫板DOM `鼠標停止 (mouseup event)` 上。<br/>結束後，`物件數據`會將由`核心`自動儲存。<br /><br />其他參數: (`canvas`,`event`)|
+|`mouseStyle`|String|N|鼠標圖示路徑。<br />點選工具後，會改變畫板的鼠標圖示。|
+
+## Tool API Example Pen.js
+下面為 Pen.js 畫筆 的 [Source code](https://github.com/CBHeng/draw/tree/master/src/js/Paint/tools/Pen.js)，可以搭配上面 `Tool Config API`。
+
+``` javascript
+
+export default {
+    dom: document.querySelector('#pen'),
+    mouseStyle: "src/image/mouse/pen.png",
+    data(canvas) {
+        return {
+            initialPoint: {
+                x: 0,
+                y: 0
+            },
+            path:[],
+        }
+    },
+
+    init(canvas, event) {
+
+    },
+
+    start(canvas, event) {
+        this.initialPoint = {
+            x: event.offsetX,
+            y: event.offsetY
+        }
+    },
+
+    move() {
+        this.path.push({
+            x: event.offsetX,
+            y: event.offsetY
+        })
+    },
+
+    stop(canvas,event) {
+
+    },
+
+    draw(canvas, event) {
+        canvas.ctx.moveTo(this.initialPoint.x, this.initialPoint.y);
+        
+        this.path.forEach( point => {
+            canvas.ctx.lineTo(point.x, point.y);
+        })
+    }
+}
+```
+
+
+
+

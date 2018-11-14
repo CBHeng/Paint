@@ -8,14 +8,6 @@ body,html{
     position: fixed;
 }
 
-#toolbar{
-    padding:0px 30px;
-}
-
-#toolbar-list-others{
-    display: inline-block;
-}
-
 .btn-large {
     padding: 20px;
     font-size: 30px;
@@ -29,4 +21,33 @@ body,html{
 }
 .not-border{
     border:0;
+}
+
+.right {
+    float: right !important;
+}
+
+.sidebar {
+    background-color: rgba(0, 0, 0, 0.9);
+    border-right: 1px solid #ccc; 
+    position: absolute;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transition: 0.2s;
+    z-index: 99;
+}
+
+.sidebar .btn-large {
+    color: #fff;
+    display: block;
+    transition: 0.2s;
+}
+.sidebar .btn-large.active {
+    background-color: #888;
+}
+.sidebar .btn-large:hover {
+    color: #000;
+    background-color: #fff;
+    transition: 0.2s;
 }
