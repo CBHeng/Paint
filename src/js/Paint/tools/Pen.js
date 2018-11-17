@@ -1,5 +1,5 @@
 export default {
-    dom: document.querySelector('#pen'),
+    el: '#pen',
     mouseStyle: "src/image/mouse/pen.png",
     data(canvas) {
         return {
@@ -11,11 +11,11 @@ export default {
         }
     },
 
-    init(canvas, event) {
+    init(event) {
 
     },
 
-    start(canvas, event) {
+    start(event) {
         this.initialPoint = {
             x: event.offsetX,
             y: event.offsetY
@@ -29,19 +29,19 @@ export default {
         })
     },
 
-    stop(canvas,event) {
+    stop(event) {
 
     },
 
-    draw(canvas, event) {
-        canvas.ctx.beginPath();
+    draw(ctx, event) {
+        ctx.beginPath();
 
-        canvas.ctx.moveTo(this.initialPoint.x, this.initialPoint.y);
+        ctx.moveTo(this.initialPoint.x, this.initialPoint.y);
         
         this.path.forEach( point => {
-            canvas.ctx.lineTo(point.x, point.y);
+            ctx.lineTo(point.x, point.y);
         })
         
-        canvas.ctx.stroke();
+        ctx.stroke();
     }
 }
