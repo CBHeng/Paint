@@ -1,33 +1,38 @@
-import CanvasEventHooks from "./CanvasEventHooks.js";
-import CanvasToolHooks from "./CanvasToolHooks.js";
-import CanvasDrawer from "./CanvasDrawer.js";
-import CanvasObjecter from "./CanvasObjecter.js";
+import Eventer from "./Eventer.js";
+import Objecter from "./Objecter.js";
+import Drawer from "./Drawer.js";
+import Tooler from "./Tooler.js";
+import Hooks from "./Hooks.js";
 
 export default class Canvas {
     constructor(config) {
-        this.element = document.querySelector(config.el)
-        this.ctx = this.element.getContext('2d')
+        let dom = document.querySelector(config.el)
+        let ctx = dom.getContext('2d')
+        let width = window.innerWidth
+        let height = window.innerHeight
 
-        this.element.width = window.innerWidth
-        this.element.height = window.innerHeight
+        this.dom = dom
+        this.dom.width = this.width = width
+        this.dom.height = this.height = height
 
-        this.width = window.innerWidth
-        this.height = window.innerHeight
-        
-        this.CanvasEventHooks = new CanvasEventHooks()
-        this.CanvasToolHooks = new CanvasToolHooks()
-        this.CanvasDrawer = new CanvasDrawer()
-        this.objecter = new CanvasObjecter(config.tools)
-
-        this.tooler = null;
+        this.drawer = new Drawer(ctx, width, height)
+        this.objecter = new Objecter(config.tools)
+        this.tooler = new Tooler(config.tools)
+        this.eventer = new Eventer()
+        this.hooks = Hooks
 
         this._init()
     }
 
     _init() {
-        this.CanvasToolHooks._init(this, this.tools)
-        this.CanvasEventHooks._init(this)
-        this.CanvasDrawer._init(this)
+        let dom = this.dom
+        let drawer = this.drawer
+        let tooler = this.tooler
+        let objecter = this.objecter
+        let hooks = this.hooks
+
+        this.tooler._bind(dom, drawer, objecter)
+        this.eventer._bind(dom, drawer, objecter, hooks)
     }
 
     get objs() {
@@ -36,11 +41,5 @@ export default class Canvas {
 
     get tools() {
         return this.objecter.tools
-    }
-
-    changeCursor(style) {
-        if(!style) return
-        console.log(style)
-        this.element.style.cursor = `url(${style}),auto`
     }
 }

@@ -1,5 +1,5 @@
 export default {
-    dom: document.querySelector('#circle'),
+    el: '#circle',
     mouseStyle: "src/image/mouse/circle.png",
     data() {
         return {
@@ -13,20 +13,20 @@ export default {
             lastY: 0
         }
     },
-    init(canvas,event) {
+    init(event) {
 
     },
-    start(canvas, event) {
+    start(event) {
         this.initialPoint = {
             x: event.offsetX,
             y: event.offsetY
         }
     },
-    move(canvas, event) {
+    move(event) {
         this.width = Math.abs(this.initialPoint.x - event.offsetX)
         this.height = Math.abs(this.initialPoint.y - event.offsetY)
     },
-    stop(canvas, event) {
+    stop(event) {
 
     },
     drawSelectStyle(canvas) {
@@ -38,18 +38,18 @@ export default {
 
         canvas.ctx.stroke()
     },
-    draw(canvas) {
-        canvas.ctx.beginPath();
-
-        canvas.ctx.strokeStyle = "#000000"
+    draw(ctx) {
+        ctx.beginPath();
+        
+        ctx.strokeStyle = "#000000"
         
         let startX = this.initialPoint.x + (this.width/2)
         let startY = this.initialPoint.y + (this.height/2)
         let r = startX > startY ? this.height/2 : this.width/2
 
-        canvas.ctx.arc(startX, startY, r, 0, 2 * Math.PI);
+        ctx.arc(startX, startY, r, 0, 2 * Math.PI);
 
-        canvas.ctx.stroke();
+        ctx.stroke();
     }
 
 }
