@@ -1,5 +1,5 @@
-import Canvas from './core/Canvas.js';
+import Paint from './core/Paint.js';
 import Pen from './tools/Pen.js';
 import Circle from './tools/Circle.js';
 
-export { Canvas, Pen, Circle };
+export { Paint, Pen, Circle };

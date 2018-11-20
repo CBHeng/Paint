@@ -1,6 +1,6 @@
-import { Canvas, Pen, Circle } from './Paint/Paint.js'
+import { Paint, Pen, Circle } from './Paint/Paint.js'
 
-let canvas = new Canvas({
+let paint = new Paint({
     el: '#Paint',
     tools: {
         pen: Pen,

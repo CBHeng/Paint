@@ -5,29 +5,19 @@ export default class Tooler {
         this.tools = tools
     }
 
-    _bind(canvasDom, drawer, objecter) {
-        Object.keys(this.tools).forEach( key => {
+    _init(drawer, objecter, eventer, hooks) {
+        Object.keys(this.tools).forEach(key => {
             let tool = this.tools[key]
-
+            let $this = tool
             let dom = tool.dom = document.querySelector(tool.el)
+            let event = 'click'
+            let eventthing = hooks.tooler['click']
 
-            dom.addEventListener('click', this.clickDoing.bind(tool, canvasDom, drawer, objecter) )
+            eventer._bind($this, dom, event, eventthing, drawer, objecter)
 
             if (isNull(tool.mouseStyle)) return
 
             new Image().src = tool.mouseStyle
         })
-    }
-
-    clickDoing(canvasDom, drawer, objecter, event) {
-        let tool = this
-        
-        tool.init()
-
-        objecter.current.tooler = tool
-
-        if (isNull(objecter.current.tooler.mouseStyle)) return
-
-        canvasDom.style.cursor = `url(${objecter.current.tooler.mouseStyle}),auto`
     }
 }

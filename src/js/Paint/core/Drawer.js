@@ -1,13 +1,12 @@
 export default class Drawer {
-    constructor(ctx, width, height) {
-        this.ctx = ctx
-        this.width = width
-        this.height = height
+    constructor(canvas, width, height) {
+        this.target = canvas
+        this.ctx = canvas.dom.getContext('2d')
         this.status = "select"
     }
 
     _redraw(objs) {
-        this.ctx.clearRect(0, 0, this.width, this.height)
+        this.ctx.clearRect(0, 0, this.target.width, this.target.height)
 
         objs.forEach((obj) => {
             obj.draw(this.ctx)
