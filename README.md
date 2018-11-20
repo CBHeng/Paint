@@ -6,7 +6,7 @@
 
 ## Demo
 
-[點我->實際範例 ](https://cbheng.github.io/draw/)
+[點我->實際範例 ](https://cbheng.github.io/Paint/)
 
 使用 PaintJS Module，來初始化小畫家基本工具，PaintJS Module只對Canvas dom、Tool dom 來做初始化。
 
@@ -48,7 +48,7 @@ let canvas = new Canvas({
 |`mouseStyle`|String|N|鼠標圖示路徑。<br />點選工具後，會改變畫板的鼠標圖示。|
 
 ## Tool API Example Pen.js
-下面為 Pen.js 畫筆 的 [Source code](https://github.com/CBHeng/draw/tree/master/src/js/Paint/tools/Pen.js)，可以搭配上面 `Tool Config API`。
+下面為 Pen.js 畫筆 的 [Source code](https://github.com/CBHeng/Paint/tree/master/src/js/Paint/tools/Pen.js)，可以搭配上面 `Tool Config API`。
 
 ``` javascript
 
