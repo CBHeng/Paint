@@ -51,3 +51,72 @@ body,html{
     background-color: #fff;
     transition: 0.2s;
 }
+#colorpicker {
+    top: 200px;
+    right: 100px;
+    position: fixed;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#colorpicker > .navbar {
+    position: relative;
+    border-bottom: 1px solid #ccc;
+    margin-right: 2px;
+    margin-left: 2px;
+    padding-top:3px;
+    padding-left: 5px;
+}
+
+#colorpicker > .navbar .btn {
+    width: 15px;
+    height: 15px;
+    border:1px solid #ccc;
+    display: inline-block;
+}
+
+#colorpicker > .content {
+    position: relative;
+}
+
+#colorpicker > .content .color-bar {
+    padding: 10px;
+}
+
+#colorpicker > .content .color-bar .bar {
+    position: relative;
+    width:200px;
+    height: 15px;
+    border-radius: 15px;
+    background: #fff;
+    display: inline-block;
+}
+
+#colorpicker > .content .color-bar .bar > .connect {
+    background: #000;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 20px;
+}
+
+#colorpicker > .content .color-bar .bar > .selecter {
+    background: #fff;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    border-radius: 15px;
+    border:1px solid #eee;
+    left: 0px;
+    top: -5px;
+    transform: translateX(-50%);
+}
+
+#colorpicker > .content .color-bar .number {
+    background-color: #e4e4e4;
+    display: inline-block;
+    margin-left: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 3px;
+}

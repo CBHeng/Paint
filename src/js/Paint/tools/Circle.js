@@ -1,6 +1,9 @@
 export default {
     el: '#circle',
     mouseStyle: "src/image/mouse/circle.png",
+    attritubes: {
+        color: false
+    },
     data() {
         return {
             initialPoint: {

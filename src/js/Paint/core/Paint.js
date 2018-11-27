@@ -2,6 +2,7 @@ import Eventer from "./Eventer.js";
 import Objecter from "./Objecter.js";
 import Drawer from "./Drawer.js";
 import Tooler from "./Tooler.js";
+import Attributer from "./Attributer.js";
 import Hooks from "./Hooks.js";
 import Canvas from "./Canvas.js";
 
@@ -15,6 +16,7 @@ export default class Paint {
         this.drawer = new Drawer(this.canvas, width, height)
         this.objecter = new Objecter(config.tools)
         this.tooler = new Tooler(config.tools)
+        this.attributer = new Attributer(config.attributes)
         this.eventer = new Eventer()
         this.hooks = Hooks
 
@@ -28,6 +30,7 @@ export default class Paint {
         let hooks = this.hooks
 
         this.tooler._init(drawer, objecter, eventer, hooks)
+        this.attributer._init(drawer, objecter, eventer, hooks)
         this.canvas._init(drawer, objecter, eventer, hooks)
     }
 }

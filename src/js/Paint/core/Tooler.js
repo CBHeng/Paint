@@ -8,12 +8,11 @@ export default class Tooler {
     _init(drawer, objecter, eventer, hooks) {
         Object.keys(this.tools).forEach(key => {
             let tool = this.tools[key]
-            let $this = tool
             let dom = tool.dom = document.querySelector(tool.el)
             let event = 'click'
-            let eventthing = hooks.tooler['click']
+            let eventthing = hooks.tooler['click'].bind(tool, drawer, objecter)
 
-            eventer._bind($this, dom, event, eventthing, drawer, objecter)
+            eventer._bind(dom, event, eventthing)
 
             if (isNull(tool.mouseStyle)) return
 

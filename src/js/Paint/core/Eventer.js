@@ -3,7 +3,7 @@ export default class Eventer {
         
     }
     
-    _bind($this, dom, event, eventthing, ...others) {
-        dom.addEventListener(event, eventthing.bind($this, ...others))
+    _bind(dom, event, eventthing) {
+        dom.addEventListener(event, eventthing)
     }
 }

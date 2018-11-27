@@ -1,6 +1,9 @@
 export default {
     el: '#pen',
     mouseStyle: "src/image/mouse/pen.png",
+    attritubes: {
+        color: true
+    },
     data(canvas) {
         return {
             initialPoint: {

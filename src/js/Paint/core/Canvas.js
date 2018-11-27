@@ -17,10 +17,9 @@ export default class Canvas {
 
         //events bind
         events.forEach(event => {
-            let $this = this
-            let eventthing = hooks[event]
+            let eventthing = hooks[event].bind(this, drawer, objecter)
 
-            eventer._bind($this, dom, event, eventthing, drawer, objecter)
+            eventer._bind(dom, event, eventthing)
         })
     }
 }

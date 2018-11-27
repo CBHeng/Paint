@@ -38,5 +38,6 @@ export default {
 
             Drawer.target.dom.style.cursor = `url(${Objecter.current.tooler.mouseStyle}),auto`
         }
-    }
+    },
+    
 }
