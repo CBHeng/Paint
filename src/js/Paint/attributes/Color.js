@@ -10,79 +10,64 @@ export default {
         let colorBars = [redBar, greenBar, blueBar]
         
         //pciker event
-        let isMoving = false
+        let spaceX = 0
+        let spaceY = 0
 
-        navbar.addEventListener('mousedown',function(){
-            if(isMoving) return
-
-            isMoving = true
-        })
-
-        navbar.addEventListener('mousemove', function () {
-            if (!isMoving) return
-
+        navbar.addEventListener('dragstart',function(event){
             let ract = colorpicker.getBoundingClientRect()
 
+            spaceX = event.pageX - ract.left
+            spaceY = event.pageY - ract.top
+
+        }, false)
+
+        navbar.addEventListener('drag', function (event) {
+            let ract = colorpicker.getBoundingClientRect()
+            //先算點擊與dom起始多長
+
             colorpicker.style.right = 0
-            colorpicker.style.left = ract.left + event.movementX +"px"
-            colorpicker.style.top = ract.top + event.movementY + "px"
-        })
+            colorpicker.style.left = (event.pageX - spaceX) + "px"
+            colorpicker.style.top = (event.pageY - spaceY) + "px"
+        }, false)
+        
 
-        navbar.addEventListener('mouseup', function () {
-            if (!isMoving) return
+        navbar.addEventListener('dragend', function (event) {
+            let ract = colorpicker.getBoundingClientRect()
+            //先算點擊與dom起始多長
 
-            isMoving = false
-        })
-
-        navbar.addEventListener('mouseover', function () {
-            if (!isMoving) return
-
-            isMoving = false
-        })
-
+            colorpicker.style.right = 0
+            colorpicker.style.left = (event.pageX - spaceX) + "px"
+            colorpicker.style.top = (event.pageY - spaceY) + "px"
+        }, false)
 
         // colorBars bind event
         colorBars.forEach(bar => {
-            let isSelected = false
+            let selecter = bar.querySelector('.selecter')
+            let connect = bar.querySelector('.connect')
+            
+            selecter.addEventListener('dragstart', function (event) {
+               
+            }, false)
 
-            bar.addEventListener('mousedown',function(event){
-                event.stopPropagation()
-
-                if(isSelected) return
-
-                isSelected = true
-            }, true)
-
-            bar.addEventListener('mousemove', function(event){
-                event.stopPropagation()
-
-                if(!isSelected) return
-
-                let selecter = bar.querySelector('.selecter')
-                let connect = bar.querySelector('.connect')
-                
+            selecter.addEventListener('drag', function(event){
                 let left = ( (event.pageX - bar.getBoundingClientRect().x) / bar.clientWidth ) * 100
                 let right = 100 - left
 
+                if (left < 0 || left > 100) return
+
                 selecter.style.left = `${left}%`
                 connect.style.right = `${right}%`
-            }, true)
+            }, false)
 
-            bar.addEventListener('mouseup', function (event) {
-                event.stopPropagation()
+            selecter.addEventListener('dragend', function (event) {                
+                let left = ((event.pageX - bar.getBoundingClientRect().x) / bar.clientWidth) * 100
+                let right = 100 - left
 
-                if(!isSelected) return
+                if (left < 0 || left > 100) return
 
-                isSelected = false
-            }, true)
-
-            bar.addEventListener('mouseover', function (event) {
-                event.stopPropagation()
-
-                if (!isSelected) return
-
-                isSelected = false
-            }, true)
+                selecter.style.left = `${left}%`
+                connect.style.right = `${right}%`
+            }, false)
         })
     },
 }
