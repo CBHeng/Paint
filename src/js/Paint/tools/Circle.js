@@ -44,12 +44,11 @@ export default {
     draw(ctx) {
         ctx.beginPath();
         
-        ctx.strokeStyle = "#000000"
-        
         let startX = this.initialPoint.x + (this.width/2)
         let startY = this.initialPoint.y + (this.height/2)
         let r = startX > startY ? this.height/2 : this.width/2
-
+        
+        ctx.strokeStyle = this.color
         ctx.arc(startX, startY, r, 0, 2 * Math.PI);
 
         ctx.stroke();

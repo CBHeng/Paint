@@ -1,4 +1,5 @@
-import { Paint, Pen, Circle, Color } from './Paint/Paint.js'
+import { Paint, Pen, Circle } from './Paint/Paint.js'
+import Colorpicker from "./Paint/package/colorpicker/index.js"
 
 let paint = new Paint({
     el: '#Paint',
@@ -7,7 +8,13 @@ let paint = new Paint({
         circle: Circle
     },
     attributes: {
-        color: Color
+        color: {
+            default: "#000",
+            picker: Colorpicker,
+            onChange: function (drawer, objecter, color) {
+                objecter.current.color = color
+            }
+        }
     }
 })
 

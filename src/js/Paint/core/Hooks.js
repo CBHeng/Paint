@@ -8,7 +8,7 @@ export default {
             let objecter = Objecter.addCurrentObj()
 
             Objecter.current.tooler.start(event)
-
+            console.log(Objecter.current.tooler)
             Drawer.startDraw(Objecter.objs)
         },
         mousemove(Drawer, Objecter, event) {

@@ -14,7 +14,7 @@ export default class Paint {
 
         this.canvas = new Canvas(dom, width, height)
         this.drawer = new Drawer(this.canvas, width, height)
-        this.objecter = new Objecter(config.tools)
+        this.objecter = new Objecter(config.tools, config.attributes)
         this.tooler = new Tooler(config.tools)
         this.attributer = new Attributer(config.attributes)
         this.eventer = new Eventer()

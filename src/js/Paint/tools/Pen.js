@@ -38,9 +38,11 @@ export default {
 
     draw(ctx, event) {
         ctx.beginPath();
-
+        
         ctx.moveTo(this.initialPoint.x, this.initialPoint.y);
         
+        ctx.strokeStyle = this.color
+
         this.path.forEach( point => {
             ctx.lineTo(point.x, point.y);
         })
