@@ -1,11 +1,20 @@
 export function makeDom(type, name, css, attritubes) {
-    let dom = document.createElement('div');
-
-    dom = addTagToDom(dom,{ type, name })
+    let dom = addTagToDom({ type, name })
     dom = addCSSToDom(dom, css)
     dom = addAttributesToDom(dom, attritubes)
 
     return dom
+}
+
+export function makeIcon(name, css) {
+    let icon = document.createElement('i');
+
+    icon.classList.add(`fas`)
+    icon.classList.add(`fa-${name}`)
+
+    icon = addCSSToDom(icon, css)
+
+    return icon
 }
 
 export function customColor(type) {
@@ -39,10 +48,17 @@ function componentToHex(c) {
 }
 
 
-function addTagToDom(dom ,{ type, name}) {
+function addTagToDom({type, name}) {
+    let dom = null;
+
     if(type === "class") {
+        dom = document.createElement("div")
         dom.classList.add(name)
-    }else{
+    } else if (type === "input") {
+        dom = document.createElement("input")
+        dom.classList.add(name)
+    } else {
+        dom = document.createElement("div")
         dom.setAttribute(type, name)
     }
 

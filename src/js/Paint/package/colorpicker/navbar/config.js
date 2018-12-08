@@ -7,7 +7,7 @@ const config = {
             paddingTop: "3px",
             paddingLeft: "5px",
             position: "relative",
-            borderBottom: "1px solid #ccc",
+            borderBottom: "1px solid #aaa",
         },
         attribute: {
             draggable: true
@@ -18,7 +18,7 @@ const config = {
             width: "15px",
             height: "15px",
             display: "inline-block",
-            border: "1px solid #ccc",
+            border: "1px solid #aaa",
         }
     }
 }

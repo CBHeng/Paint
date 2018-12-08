@@ -1,7 +1,7 @@
 const config = {
     color: {
         css: {
-            padding: "10px"
+            padding: "10px 23px 10px 23px",
         },
         attribute: {
 
@@ -12,7 +12,7 @@ const config = {
                 "width": "200px",
                 "height": "15px",
                 "borderRadius": "15px",
-                "backgroundColor": "#fff",
+                "backgroundColor": "rgba(255,255,255,0.8)",
                 "display": "inline-block"
             },
             attribute: {
